@@ -14,29 +14,30 @@ $.fn.extend({
 
 function generateBookmarkElement(bookmark) {
   console.log('bookmark from generateBookmarkElement');
-  if (bookmark.isExpanded) {
-    return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
-      <h3>${bookmark.title}</h3>
-      <p>${bookmark.rating} Stars</p>
-    </li>
-    <div>
-      <h4>Description</h4>
-      <p>${bookmark.desc}</p>
-    </div>
-    <button type="button">Visit URL</button>
-    <button type="button">Delete</button>`;
-  } else {
-    return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
-      <h3>${bookmark.title}</h3>
-      <p>${bookmark.rating} Stars</p>
-    </li>`;
-  } 
+  if (bookmark.rating >= store.filter) {
+    if (bookmark.isExpanded) {
+      return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
+        <h3>${bookmark.title}</h3>
+        <p>${bookmark.rating} Stars</p>
+      </li>
+      <div>
+        <h4>Description</h4>
+        <p>${bookmark.desc}</p>
+      </div>
+      <button onclick="window.open(href='${bookmark.url}')" type="button">Visit Website</button>
+      <button class="delete-btn js-delete" type="button">Delete</button>`;
+    } else {
+      return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
+        <h3>${bookmark.title}</h3>
+        <p>${bookmark.rating} Stars</p>
+      </li>`;
+    }
+  }    
 }
 
 function generateBookmarks(bookmarkList) {
   console.log('bookmarks from generateBookmarksString', bookmarkList);
   let bookmarks = bookmarkList.map(bookmark => generateBookmarkElement(bookmark));
-  
   return `<section class="my-bookmarks">
   <div class="bookmark-controls">
     <button type="button" class="add-bookmark-btn js-add-new-bookmark">Add Bookmark</button>
@@ -117,7 +118,22 @@ function handleFilterSelected() {
     console.log('filter value', filter);
     store.filter = filter;
     console.log('store.filter', store.filter);
+    render();
   })
+}
+
+function handleDeleteClicked() {
+  $('main').on('click', '.js-delete', (event) => {
+    console.log('You are trying to delete a bookmark.');
+    let bookmarkId = $(event.target).siblings('.bookmark').data('bookmark-id');
+    console.log('store.bookmarks', store.bookmarks);
+    console.log('deletedId', bookmarkId);
+    api.deleteBookmark(bookmarkId)
+      .then(() => {
+        store.deleteBookmark(bookmarkId);
+        render();
+      });
+  });
 }
 
 function eventHandlers() {
@@ -126,6 +142,7 @@ function eventHandlers() {
   handleAddBookmarkClicked();
   handleBookmarkClicked();
   handleFilterSelected();
+  handleDeleteClicked();
 }
 
 function render() {

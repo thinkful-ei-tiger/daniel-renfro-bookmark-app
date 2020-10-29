@@ -23,11 +23,15 @@ const addBookmark = function (bookmarkData) {
   })
 }
 
-const deleteBookmarks = function () {
-
+const deleteBookmark = function (id) {
+  return listApiFetch(`${BASE_URL}/${id}`, 
+  {
+    method: 'DELETE'
+  });
 }
 
 export default {
   getBookmarks,
-  addBookmark
+  addBookmark,
+  deleteBookmark
 };
