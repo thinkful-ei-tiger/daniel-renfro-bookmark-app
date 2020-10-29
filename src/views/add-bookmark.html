@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Renfro Bookmark App</title>
+</head>
+<body>
+  <header>
+    <h1>My Bookmarks</h1>
+  </header>
+  <main>
+    <section class="my-bookmarks">
+      <h2>Add New Bookmark</h2>
+      <form action="">
+        <label for="bookmark-title">Title</label>
+        <input id="bookmark-title" name="title" type="text" placeholder="e.g. Google" required>
+        <label for="bookmark-url">URL</label>
+        <input id="bookmark-url" name="url" type="url" placeholder="e.g www.google.com" required>
+        <label for="bookmark-rating">Rating</label>
+        <input id="bookmark-rating" name="rating" type="number" min="1" max="5" placeholder="1">
+        <label for="bookmark-desc">Description</label>
+        <textarea id="bookmark-desc" name="desc">
+          Enter a description for your bookmark!
+        </textarea>
+        <button type="button">Cancel</button>
+        <button type="submit">Add Bookmark</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

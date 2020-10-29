@@ -1,0 +1,33 @@
+const BASE_URL = 'https://thinkful-list-api.herokuapp.com/danielrenfro/bookmarks';
+
+const listApiFetch = function (...args) {
+  return fetch(...args)
+    .then (response => {
+      return response.json();
+    })
+    .then (data => {
+      return data;
+    });
+};
+
+const getBookmarks = function () {
+  return listApiFetch(`${BASE_URL}`);
+}
+
+const addBookmark = function (bookmarkData) {
+  return listApiFetch(`${BASE_URL}`, 
+  {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: bookmarkData
+  })
+}
+
+const deleteBookmarks = function () {
+
+}
+
+export default {
+  getBookmarks,
+  addBookmark
+};

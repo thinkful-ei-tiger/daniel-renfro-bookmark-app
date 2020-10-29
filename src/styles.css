@@ -1,0 +1,50 @@
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+}
+
+.my-bookmarks {
+  border: steelblue solid 1px;
+  margin: auto;
+  width: 90vw;
+}
+
+.bookmark-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.bookmark-list {
+  padding: 0;
+}
+
+.bookmark {
+  border: grey solid 1px;
+  margin: 15px 0px 15px 0px;
+  border-radius: 5px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bookmark h3 {
+  margin-left: 20px;
+}
+
+.bookmark p {
+  margin-right: 20px;
+}
+
+input {
+  display: block;
+}
+
+@media all and (min-width: 800px) {
+  .my-bookmarks {
+    width: 30vw;
+  }
+}
