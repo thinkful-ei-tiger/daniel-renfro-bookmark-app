@@ -12,18 +12,33 @@ function findBookmarkById(id) {
    return foundItem;
 }
 
-function createBookmark(bookmark) {
+function createBookmark(formData) {
   // Takes data in the shape of an object, and creates a new bookmark with that data and then pushes that new item to the store.
   const newBookmark = {
-    isExpanded: false
+    isExpanded: false,
+    inEditMode: false
   };
-  bookmarks.push(Object.assign(bookmark, newBookmark));
+  bookmarks.push(Object.assign(formData, newBookmark));
   console.log('createBookmark function', bookmarks);
 }
+
+function findAndUpdateBookmark(id, updateData) {
+  let parsedData = JSON.parse(updateData);
+
+  let foundItem = findBookmarkById(id);
+  let index = bookmarks.findIndex(bookmark => bookmark.id === id);
+  let mergedData = Object.assign(foundItem, parsedData);
+  bookmarks.splice(index, 1, mergedData);
+} 
 
 function toggleIsExpanded(id) {
   let foundItem = findBookmarkById(id);
   foundItem.isExpanded = !foundItem.isExpanded;
+}
+
+function toggleInEditMode(id) {
+  let foundItem = findBookmarkById(id);
+  foundItem.inEditMode = !foundItem.inEditMode;
 }
 
 function deleteBookmark(id) {
@@ -45,5 +60,7 @@ export default {
   setError,
   createBookmark,
   deleteBookmark,
-  toggleIsExpanded
+  toggleIsExpanded,
+  toggleInEditMode,
+  findAndUpdateBookmark
 };

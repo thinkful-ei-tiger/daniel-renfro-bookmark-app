@@ -14,7 +14,6 @@ const listApiFetch = function (...args) {
         store.setError(false);
         return response.json();
       }
-      
     })
     .then (data => {
       if (!error) {
@@ -36,6 +35,15 @@ const addBookmark = function (bookmarkData) {
   })
 }
 
+const updateBookmark = function (id, updateData) {
+  return listApiFetch(`${BASE_URL}/${id}`, 
+  {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: updateData
+  })
+}
+
 const deleteBookmark = function (id) {
   return listApiFetch(`${BASE_URL}/${id}`, 
   {
@@ -46,5 +54,6 @@ const deleteBookmark = function (id) {
 export default {
   getBookmarks,
   addBookmark,
-  deleteBookmark
+  deleteBookmark,
+  updateBookmark
 };

@@ -12,25 +12,70 @@ $.fn.extend({
   }
 })
 
+// ---------- Templates for Bookmark Views -----------
+
+function simpleView(bookmark) {
+  return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
+        <div class="bookmark-title">
+          <h3>${bookmark.title}</h3>
+          <p>${bookmark.rating} ${(bookmark.rating > 1) ? 'Stars' : 'Star'}</p>
+        </div>
+      </li>`;
+}
+
+function editMode(bookmark) {
+  return `<li class="edit-bookmark" data-bookmark-id="${bookmark.id}">
+        <div class="bookmark-title">
+          <h3>${bookmark.title}</h3>
+          <p>${bookmark.rating} ${(bookmark.rating > 1) ? 'Stars' : 'Star'}</p>
+        </div>
+
+        <form class="edit-bookmark-form">
+          <label for="bookmark-title">Edit Title</label>
+          <input id="bookmark-title" name="title" type="text" value="${bookmark.title}" required>
+          <label for="bookmark-url">Edit Url</label>
+          <input id="bookmark-url" name="url" type="url" value="${bookmark.url}" required>
+          <label for="bookmark-rating">Edit Rating</label>
+          <input id="bookmark-rating" name="rating" type="number" min="1" max="5" value="${bookmark.rating}">
+          <label for="bookmark-desc">Edit Description</label>
+          <textarea id="bookmark-desc" defaultValue="${bookmark.desc}" ></textarea>
+          <div>
+            <button type="button" class="btn cancel-btn js-cancel-edit">Cancel</button>
+            <button type="submit" class="btn js-save">Save</button>
+          </div>
+        </form>
+      </li>`;
+}
+
+function expandedView(bookmark) {
+  return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
+        <div class="bookmark-title">
+          <h3>${bookmark.title}</h3>
+          <p>${bookmark.rating} ${(bookmark.rating > 1) ? 'Stars' : 'Star'}</p>
+        </div>
+        <div class="bookmark-description">
+          <h4>Description</h4>
+          ${(bookmark.desc.length === 0) ? '<p>No description.</p>' : `<p>${bookmark.desc}</p>`}
+        </div>
+        <div class="bookmark-buttons">
+          <button class="btn" onclick="window.open(href='${bookmark.url}')" type="button">Visit Website</button>
+          <button class="btn edit-btn js-edit">Edit</button>
+          <button class="btn delete-btn js-delete" type="button">Delete</button>
+        </div>
+      </li>`;
+}
+
+// --------------------------------------------------------
+
 function generateBookmarkElement(bookmark) {
   console.log('bookmark from generateBookmarkElement');
   if (bookmark.rating >= store.filter) {
-    if (bookmark.isExpanded) {
-      return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
-        <h3>${bookmark.title}</h3>
-        <p>${bookmark.rating} Stars</p>
-      </li>
-      <div>
-        <h4>Description</h4>
-        ${(bookmark.desc.length === 0) ? '<p>No description.</p>' : `<p>${bookmark.desc}</p>`}
-      </div>
-      <button onclick="window.open(href='${bookmark.url}')" type="button">Visit Website</button>
-      <button class="delete-btn js-delete" type="button">Delete</button>`;
+    if (bookmark.inEditMode) {
+      return editMode(bookmark);
+    } else if (bookmark.isExpanded) {
+      return expandedView(bookmark);
     } else {
-      return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
-        <h3>${bookmark.title}</h3>
-        <p>${bookmark.rating} Stars</p>
-      </li>`;
+      return simpleView(bookmark);
     }
   }    
 }
@@ -42,7 +87,7 @@ function generateBookmarks(bookmarkList) {
   
   return `<section class="my-bookmarks">
   <div class="bookmark-controls">
-    <button type="button" class="add-bookmark-btn js-add-new-bookmark">Add Bookmark</button>
+    <button type="button" class="btn add-bookmark-btn js-add-new-bookmark">Add Bookmark</button>
     <select class="filter">
       <option value="" ${(store.filter === "0") ? 'selected' : ''}>Filter By</option>
       <option value="0">Clear Filter</option>
@@ -70,15 +115,14 @@ function generateNewBookmarkForm() {
     </section>
     <form action="" class="new-bookmark-form">
       <label for="bookmark-title">Title</label>
-      <input id="bookmark-title" name="title" type="text" placeholder="e.g. Google" required>
-      <label for="bookmark-url">URL</label>
-      <input id="bookmark-url" name="url" type="url" placeholder="e.g http://google.com" required>
+      <input id="bookmark-title" name="title" type="text" placeholder="Title" required>
+      <label for="bookmark-url">Url</label>
+      <input id="bookmark-url" name="url" type="url" placeholder="http://google.com" required>
       <label for="bookmark-rating">Rating</label>
       <input id="bookmark-rating" name="rating" type="number" min="1" max="5" placeholder="1">
-      <label for="bookmark-desc">Description</label>
-      <textarea id="bookmark-desc" name="desc" placeholder="Enter a description for your bookmark!"></textarea>
-      <button type="button" class="cancel-btn js-cancel-new-bookmark">Cancel</button>
-      <button type="submit" class="submit-btn js-add-bookmark">Add Bookmark</button>
+      <textarea id="bookmark-desc" name="desc" placeholder="Description"></textarea>
+      <button type="button" class="btn cancel-btn js-cancel-new-bookmark">Cancel</button>
+      <button type="submit" class="btn submit-btn js-add-bookmark">Add Bookmark</button>
     </form>
   </section>`;
 }
@@ -86,8 +130,8 @@ function generateNewBookmarkForm() {
 function generateError(message) {
   return `
       <section class="error-message">
-        <button id="close-error">Close</button>
         <p>${message}</p>
+        <button class="btn" id="close-error">Close</button>
       </section>
     `;
 }
@@ -125,24 +169,23 @@ function handleCancelNewBookmarkClicked() {
 function evaluateBookmarkSubmission(dataObject) {
   let data = JSON.parse(dataObject);
   
-  if (data.title.length === 0 || data.title === " " || data.url.length === 0 || data.rating.length === 0) {
-    store.errorMessage = 'Title, URL or Rating cannot be blank.';
-  } else if (data.title.length === 1) {
-    store.errorMessage = 'Title must be longer than one character.';
-  } else if (!data.url.includes('http')) {
-    store.errorMessage = 'URL must begin with http(s)://.';
-  } else if (data.url.length <= 5) {
-    store.errorMessage = 'URL must be longer than 5 characters.';
+  if ((data.title.length === 0 || data.title === ' ') && data.url.length === 0 && data.rating.length === 0) {
+    store.errorMessage = 'Title, URL and Rating cannot be blank.';
+  } else if (data.title === ' ' || data.title.length <= 1) {
+    store.errorMessage = 'Title cannot be blank and must be longer than one character.';
+  } else if (!data.url.includes('http') || data.url.length <= 5) {
+    store.errorMessage = 'URL must be longer than 5 characters and include http(s)://.';
+  } else if (data.rating.length === 0) {
+    store.errorMessage = 'Rating cannot be empty and must have a value between 1 and 5.';
   } else {
     store.errorMessage = '';
   }
 }
 
 function handleAddBookmarkClicked() {
-  $('main').on('click', '.js-add-bookmark', (event) => {
+  $('main').on('submit', '.new-bookmark-form', (event) => {
     event.preventDefault();
     let newBookmark = $('.new-bookmark-form').serializeJson();
-    console.log('newBookmark', newBookmark);
     evaluateBookmarkSubmission(newBookmark);
     api.addBookmark(newBookmark)
       .then((bookmark) => {
@@ -174,20 +217,53 @@ function handleFilterSelected() {
 
 function handleDeleteClicked() {
   $('main').on('click', '.js-delete', (event) => {
-    console.log('You are trying to delete a bookmark.');
-    let bookmarkId = $(event.target).siblings('.bookmark').data('bookmark-id');
-    console.log('store.bookmarks', store.bookmarks);
-    console.log('deletedId', bookmarkId);
+    let bookmarkId = $(event.target).closest('.bookmark').data('bookmark-id');
     api.deleteBookmark(bookmarkId)
       .then(() => {
         store.deleteBookmark(bookmarkId);
         render();
-        console.log('store after deletion', store.bookmarks);
       })
       .catch(error => {
         renderError();
       });
   });
+}
+
+function handleEditClicked() {
+  $('main').on('click', '.js-edit', (event) => {
+    let bookmarkId = $(event.target).closest('.bookmark').data('bookmark-id');
+    store.toggleInEditMode(bookmarkId);
+    render();
+  })
+}
+
+function handleCancelEditClicked() {
+  $('main').on('click', '.js-cancel-edit', (event) => {
+    let bookmarkId = $(event.target).closest('.edit-bookmark').data('bookmark-id');
+    store.toggleInEditMode(bookmarkId);
+    render();
+  })
+}
+
+function handleSaveClicked() {
+ $('main').on('submit', '.edit-bookmark-form', (event) => {
+   event.preventDefault();
+   console.log('Is anything happening?')
+   let id = $(event.target).closest('.edit-bookmark').data('bookmark-id');
+   console.log('id', id);
+   let editData = $('.edit-bookmark-form').serializeJson();
+   console.log('editData', editData);
+   evaluateBookmarkSubmission(editData);
+   api.updateBookmark(id, editData)
+    .then(() => {
+      store.findAndUpdateBookmark(id, editData);
+      store.toggleInEditMode(id);
+      render();
+    })
+    .catch(error => {
+      renderError();
+    });
+ });
 }
 
 function eventHandlers() {
@@ -198,6 +274,9 @@ function eventHandlers() {
   handleFilterSelected();
   handleDeleteClicked();
   handleCloseError();
+  handleEditClicked();
+  handleCancelEditClicked();
+  handleSaveClicked();
 }
 
 function render() {
