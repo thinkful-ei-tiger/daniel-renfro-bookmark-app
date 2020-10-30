@@ -1,12 +1,25 @@
+import store from "./store";
+
 const BASE_URL = 'https://thinkful-list-api.herokuapp.com/danielrenfro/bookmarks';
 
 const listApiFetch = function (...args) {
+  let error;
   return fetch(...args)
     .then (response => {
-      return response.json();
+      if (!response.ok) {
+        error = true;
+        store.setError(true);
+        return response.json();
+      } else {
+        store.setError(false);
+        return response.json();
+      }
+      
     })
     .then (data => {
-      return data;
+      if (!error) {
+        return data;
+      }
     });
 };
 

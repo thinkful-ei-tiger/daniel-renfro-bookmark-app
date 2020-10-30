@@ -2,6 +2,7 @@
 const bookmarks = [];
 let adding = false;
 let error = null;
+let errorMessage = '';
 let filter = 0;
 
 
@@ -31,11 +32,17 @@ function deleteBookmark(id) {
   bookmarks.splice(index, 1);
 }
 
+function setError(value) {
+  this.error = value;
+}
+
 export default {
   bookmarks,
   adding,
   error,
+  errorMessage,
   filter,
+  setError,
   createBookmark,
   deleteBookmark,
   toggleIsExpanded
