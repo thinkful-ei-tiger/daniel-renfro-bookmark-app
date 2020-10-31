@@ -6,20 +6,32 @@
   box-sizing: border-box;
 }
 
+body {
+  height: 100vh;
+  width: 100vw;
+  background-image: linear-gradient(to bottom right, #E6D0A5, #C9B791); 
+}
+
 h1 {
   font-family: "Montserrat";
   text-align: center;
 }
 
+h2 {
+  font-family: "Montserrat";
+  width: 90%;
+  margin: 15px auto 15px auto;
+}
+
 .my-bookmarks {
-  border: steelblue solid 1px;
   margin: auto;
-  width: 90vw;
+  width: 90%;
 }
 
 .bookmark-controls {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .bookmark-list {
@@ -27,7 +39,6 @@ h1 {
 }
 
 .bookmark {
-  border: grey solid 1px;
   margin: 15px 10px 15px 10px;
   border-radius: 5px;
   list-style: none;
@@ -35,11 +46,12 @@ h1 {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  background-color: #fff;
 }
 
 .bookmark .bookmark-title {
   background-color: #455A75;
-  color: #C9E0FF;
+  color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,14 +61,18 @@ h1 {
 .bookmark .bookmark-buttons {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
+  height: 50px;
+  padding: 10px 15px 10px 15px;
+  background-color: #fff;
 }
 
 .bookmark .bookmark-description {
   padding: 10px 15px 10px 15px;
   width: 100%;
+  background-color: #fff;
 }
 
 .bookmark h3 {
@@ -66,11 +82,12 @@ h1 {
 
 .bookmark h4 {
   font-family: "Lora";
+  margin: 10px 0px 10px 0px;
 }
 
 .bookmark p {
   font-family: "Hind Madurai";
-  margin-right: 20px;
+  margin: 10px 20px 10px 0px;
 }
 
 /* Styling for the Bookmark in Edit Mode */
@@ -84,15 +101,17 @@ h1 {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  background-color: #fff;
 }
 
 .edit-bookmark .bookmark-title {
   background-color: #455A75;
-  color: #C9E0FF;
+  color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: 8px;
 }
 
 .edit-bookmark .bookmark-buttons {
@@ -101,6 +120,7 @@ h1 {
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
+  height: 50px;
 }
 
 .edit-bookmark .bookmark-description {
@@ -122,18 +142,17 @@ h1 {
   margin-right: 20px;
 }
 
-.edit-bookmark input {
-  font-family: "Hind Madurai";
-}
-
-.edit-bookmark label {
-  font-family: "Lora";
-}
-
 /* ---------------------------------------- */
 
 .btn {
   font-family: 'Hind Madurai';
+  background-color: #455A75;
+  color: #fff;
+  border-radius: 3px;
+  border: 0;
+  font-size: 14px;
+  padding: 10px 15px 10px 15px;
+  margin: 10px 10px 10px 0px;
 }
 
 .error-message {
@@ -152,14 +171,63 @@ h1 {
 
 input {
   display: block;
+  width: 100%;
+  font-family: "Hind Madurai";
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+}
+
+label {
+  font-family: "Lora";
+  font-size: 20px;
 }
 
 textarea {
   display: block;
+  font-family: "Hind Madurai";
+  width: 100%;
+  height: 6rem;
+  margin: 5px 0px 5px 0px;
+  padding: 5px;
+}
+
+select {
+  font-family: "Hind Madurai";
+}
+
+form {
+  width: 90%;
+  margin: auto;
+}
+
+.form-buttons {
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.filter {
+  height: 36px;
+  width: 117px;
+}
+
+i {
+  color: #fff;
+  padding: 2px;
 }
 
 @media all and (min-width: 800px) {
   .my-bookmarks {
-    width: 30vw;
+    width: 40vw;
+  }
+
+  .btn {
+    font-family: 'Hind Madurai';
+    background-color: #455A75;
+    color: #fff;
+    border-radius: 3px;
+    border: 0;
+    padding: 10px 15px 10px 15px;
+    margin: 20px 15px 20px 0px;
   }
 }

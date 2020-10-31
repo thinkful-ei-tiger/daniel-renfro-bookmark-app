@@ -3,6 +3,16 @@ import $ from 'jquery';
 import store from './store';
 import api from './api';
 
+const generateStarRating = function (bookmark) {
+  let starRating;
+  let starChecked = bookmark.rating;
+  let starUnchecked = 5 - starChecked;
+  const starCheckedHtml = `<i class="fa fa-star"></i>`;
+  const starUncheckedHtml = `<i class="fa fa-star-o"></i>`;
+  starRating = starCheckedHtml.repeat(starChecked) + starUncheckedHtml.repeat(starUnchecked);
+  return starRating;
+};
+
 $.fn.extend({
   serializeJson: function() {
     const formData = new FormData(this[0]);
@@ -15,19 +25,23 @@ $.fn.extend({
 // ---------- Templates for Bookmark Views -----------
 
 function simpleView(bookmark) {
+  let bookmarkRating = generateStarRating(bookmark);
+  
   return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
         <div class="bookmark-title">
           <h3>${bookmark.title}</h3>
-          <p>${bookmark.rating} ${(bookmark.rating > 1) ? 'Stars' : 'Star'}</p>
+          <p>${bookmarkRating}</p>
         </div>
       </li>`;
 }
 
 function editMode(bookmark) {
+  let bookmarkRating = generateStarRating(bookmark);
+  
   return `<li class="edit-bookmark" data-bookmark-id="${bookmark.id}">
         <div class="bookmark-title">
           <h3>${bookmark.title}</h3>
-          <p>${bookmark.rating} ${(bookmark.rating > 1) ? 'Stars' : 'Star'}</p>
+          <p>${bookmarkRating}</p>
         </div>
 
         <form class="edit-bookmark-form">
@@ -38,8 +52,8 @@ function editMode(bookmark) {
           <label for="bookmark-rating">Edit Rating</label>
           <input id="bookmark-rating" name="rating" type="number" min="1" max="5" value="${bookmark.rating}">
           <label for="bookmark-desc">Edit Description</label>
-          <textarea id="bookmark-desc" defaultValue="${bookmark.desc}" ></textarea>
-          <div>
+          <textarea id="bookmark-desc" name="desc">${bookmark.desc}</textarea>
+          <div class="form-buttons">
             <button type="button" class="btn cancel-btn js-cancel-edit">Cancel</button>
             <button type="submit" class="btn js-save">Save</button>
           </div>
@@ -48,10 +62,12 @@ function editMode(bookmark) {
 }
 
 function expandedView(bookmark) {
+  let bookmarkRating = generateStarRating(bookmark);
+  
   return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
         <div class="bookmark-title">
           <h3>${bookmark.title}</h3>
-          <p>${bookmark.rating} ${(bookmark.rating > 1) ? 'Stars' : 'Star'}</p>
+          <p>${bookmarkRating}</p>
         </div>
         <div class="bookmark-description">
           <h4>Description</h4>
@@ -120,9 +136,12 @@ function generateNewBookmarkForm() {
       <input id="bookmark-url" name="url" type="url" placeholder="http://google.com" required>
       <label for="bookmark-rating">Rating</label>
       <input id="bookmark-rating" name="rating" type="number" min="1" max="5" placeholder="1">
+      <label for="bookmark-desc">Description</label>
       <textarea id="bookmark-desc" name="desc" placeholder="Description"></textarea>
-      <button type="button" class="btn cancel-btn js-cancel-new-bookmark">Cancel</button>
-      <button type="submit" class="btn submit-btn js-add-bookmark">Add Bookmark</button>
+      <div class="form-buttons">
+        <button type="button" class="btn cancel-btn js-cancel-new-bookmark">Cancel</button>
+        <button type="submit" class="btn submit-btn js-add-bookmark">Add Bookmark</button>
+      </div>
     </form>
   </section>`;
 }
@@ -248,11 +267,8 @@ function handleCancelEditClicked() {
 function handleSaveClicked() {
  $('main').on('submit', '.edit-bookmark-form', (event) => {
    event.preventDefault();
-   console.log('Is anything happening?')
    let id = $(event.target).closest('.edit-bookmark').data('bookmark-id');
-   console.log('id', id);
    let editData = $('.edit-bookmark-form').serializeJson();
-   console.log('editData', editData);
    evaluateBookmarkSubmission(editData);
    api.updateBookmark(id, editData)
     .then(() => {
