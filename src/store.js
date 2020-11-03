@@ -1,14 +1,13 @@
-
-const bookmarks = [];
-let adding = false;
-let error = null;
-let errorMessage = '';
-let filter = 0;
-
+const storeData = {
+  bookmarks: [],
+  adding: false,
+  error: null,
+  errorMessage: '',
+  filter: 0
+};
 
 function findBookmarkById(id) {
-   // Takes an id, looks through the array of bookmarks and returns the bookmark with the matching id.
-   let foundItem = bookmarks.find(bookmark => bookmark.id === id);
+   let foundItem = storeData.bookmarks.find(bookmark => bookmark.id === id);
    return foundItem;
 }
 
@@ -18,17 +17,16 @@ function createBookmark(formData) {
     isExpanded: false,
     inEditMode: false
   };
-  bookmarks.push(Object.assign(formData, newBookmark));
-  console.log('createBookmark function', bookmarks);
+  storeData.bookmarks.push(Object.assign(formData, newBookmark));
 }
 
 function findAndUpdateBookmark(id, updateData) {
   let parsedData = JSON.parse(updateData);
 
   let foundItem = findBookmarkById(id);
-  let index = bookmarks.findIndex(bookmark => bookmark.id === id);
+  let index = storeData.bookmarks.findIndex(bookmark => bookmark.id === id);
   let mergedData = Object.assign(foundItem, parsedData);
-  bookmarks.splice(index, 1, mergedData);
+  storeData.bookmarks.splice(index, 1, mergedData);
 } 
 
 function toggleIsExpanded(id) {
@@ -43,20 +41,16 @@ function toggleInEditMode(id) {
 
 function deleteBookmark(id) {
   // Takes an id, looks through the array of bookmarks and deletes the bookmark with the matching id.
-  let index = bookmarks.findIndex(bookmark => bookmark.id === id);
-  bookmarks.splice(index, 1);
+  let index = storeData.bookmarks.findIndex(bookmark => bookmark.id === id);
+  storeData.bookmarks.splice(index, 1);
 }
 
 function setError(value) {
-  this.error = value;
+  storeData.error = value;
 }
 
 export default {
-  bookmarks,
-  adding,
-  error,
-  errorMessage,
-  filter,
+  storeData,
   setError,
   createBookmark,
   deleteBookmark,

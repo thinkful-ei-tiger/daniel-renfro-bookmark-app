@@ -25,7 +25,7 @@ h2 {
 
 .my-bookmarks {
   margin: auto;
-  width: 90%;
+  width: 100%;
 }
 
 .bookmark-controls {
@@ -75,12 +75,13 @@ h2 {
   background-color: #fff;
 }
 
-.bookmark h3 {
+.bookmark h2 {
   font-family: "Lora";
   margin-left: 20px;
+  font-size: 20px;
 }
 
-.bookmark h4 {
+.bookmark h3 {
   font-family: "Lora";
   margin: 10px 0px 10px 0px;
 }
@@ -88,6 +89,7 @@ h2 {
 .bookmark p {
   font-family: "Hind Madurai";
   margin: 10px 20px 10px 0px;
+  min-width: fit-content;
 }
 
 /* Styling for the Bookmark in Edit Mode */
@@ -128,18 +130,20 @@ h2 {
   width: 100%;
 }
 
-.edit-bookmark h3 {
+.edit-bookmark h2 {
   font-family: "Lora";
   margin-left: 20px;
+  font-size: 20px;
 }
 
-.edit-bookmark h4 {
+.edit-bookmark h3 {
   font-family: "Lora";
 }
 
 .edit-bookmark p {
   font-family: "Hind Madurai";
   margin-right: 20px;
+  min-width: fit-content;
 }
 
 /* ---------------------------------------- */
