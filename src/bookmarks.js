@@ -63,7 +63,7 @@ function handleAddBookmarkClicked() {
           renderError();
         } else {
           store.setError(null);
-          store.createBookmark(bookmark);
+          store.createBookmark(data);
           store.storeData.adding = !store.storeData.adding;
           render();
         }
