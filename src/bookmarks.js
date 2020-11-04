@@ -57,12 +57,18 @@ function handleAddBookmarkClicked() {
     let newBookmark = $('.new-bookmark-form').serializeJson();
     evaluateBookmarkSubmission(newBookmark);
     api.addBookmark(newBookmark)
-      .then((bookmark) => {
-        store.createBookmark(bookmark);
-        store.storeData.adding = !store.storeData.adding;
-        render();
+      .then((data) => {
+        if (data.message) {
+          store.setError(true);
+          renderError();
+        } else {
+          store.setError(null);
+          store.createBookmark(bookmark);
+          store.storeData.adding = !store.storeData.adding;
+          render();
+        }
       })
-      .catch(error => {
+      .catch(() => {
         renderError();
       });
   });

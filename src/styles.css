@@ -215,6 +215,10 @@ form {
   width: 117px;
 }
 
+.filter-label {
+  display: none;
+}
+
 i {
   color: #fff;
   padding: 2px;

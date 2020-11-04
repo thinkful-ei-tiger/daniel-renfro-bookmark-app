@@ -86,8 +86,8 @@ function generateBookmarks(bookmarkList) {
   <div class="bookmark-controls">
     <button type="button" class="btn add-bookmark-btn js-add-new-bookmark">Add Bookmark</button>
     
-    <label for="rating-filter"></label>
-    <select name="rating-filter" class="filter">
+    <label class="filter-label" for="rating-filter">Filter</label>
+    <select id="rating-filter" name="rating-filter" class="filter">
       <option value="" ${(store.storeData.filter === "0") ? 'selected' : ''}>Filter By Rating</option>
       <option value="0">Clear Filter</option>
       <option value="1" ${(store.storeData.filter === "1") ? 'selected' : ''}>1 Star</option>
@@ -119,7 +119,7 @@ function generateNewBookmarkForm() {
       <input id="bookmark-url" name="url" type="url" placeholder="http://google.com" required>
       <label for="bookmark-rating">Rating</label>
       <input id="bookmark-rating" name="rating" type="number" min="1" max="5" placeholder="1">
-      <label for="bookmark-desc">Description</label>
+      <label for="bookmark-desc" for="desc">Description</label>
       <textarea id="bookmark-desc" name="desc" placeholder="Description"></textarea>
       <div class="form-buttons">
         <button type="button" class="btn cancel-btn js-cancel-new-bookmark">Cancel</button>

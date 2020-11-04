@@ -8,15 +8,13 @@ const listApiFetch = function (...args) {
     .then (response => {
       if (!response.ok) {
         error = true;
-        store.setError(true);
-        return response.json();
-      } else {
-        store.setError(false);
-        return response.json();
       }
+      return response.json();
     })
     .then (data => {
       if (!error) {
+        return data;
+      } else {
         return data;
       }
     });
